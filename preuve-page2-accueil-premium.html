@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PREUVE — Accueil</title>
+<style>
+:root{
+  --bg1:#070b14;
+  --bg2:#0d1322;
+  --card1:rgba(20,24,36,.96);
+  --card2:rgba(12,15,24,.96);
+  --line:rgba(255,255,255,.08);
+  --text:#f5f7fb;
+  --muted:#9aa5bc;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(77,163,255,.18), transparent 24%),
+    radial-gradient(circle at top right, rgba(143,225,255,.08), transparent 20%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+body{display:flex;justify-content:center}
+.app{
+  width:100%;max-width:440px;min-height:100dvh;padding:12px 14px 24px;
+}
+.status{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 6px 14px;font-size:18px;font-weight:800;
+}
+.shell{
+  min-height:calc(100dvh - 68px);
+  border-radius:34px;padding:14px;
+  background:linear-gradient(180deg, rgba(18,20,28,.97), rgba(12,14,20,.97));
+  border:1px solid var(--line);
+  box-shadow:0 18px 55px rgba(0,0,0,.42);
+}
+.top{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+}
+.logo{
+  width:56px;height:56px;border-radius:18px;display:grid;place-items:center;
+  font-weight:900;font-size:26px;color:#04111f;
+  background:linear-gradient(145deg,#84d8ff,#4da3ff 48%,#2d6eff);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 10px 30px rgba(77,163,255,.35),0 0 24px rgba(77,163,255,.22);
+}
+.brand strong{display:block;font-size:22px}
+.brand span{display:block;font-size:12px;color:var(--muted)}
+.user{
+  padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);
+  border:1px solid var(--line);font-size:12px;font-weight:800;color:#dbe5f4;
+  max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.hero{
+  background:linear-gradient(180deg,var(--card1),var(--card2));
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:18px;
+  box-shadow:0 18px 55px rgba(0,0,0,.22);
+  margin-bottom:16px;
+}
+.hero h1{
+  margin:0 0 6px;font-size:30px;letter-spacing:-.03em;
+}
+.hero p{
+  margin:0;color:var(--muted);font-size:14px;line-height:1.5;
+}
+.cards{
+  display:grid;gap:14px;
+}
+.card{
+  background:linear-gradient(180deg,var(--card1),var(--card2));
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 18px 55px rgba(0,0,0,.18);
+  cursor:pointer;
+  transition:transform .15s ease, border-color .15s ease;
+}
+.card:active{
+  transform:scale(.985);
+}
+.card-top{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+}
+.icon{
+  width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;
+  font-size:22px;font-weight:900;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+}
+.arrow{
+  color:#8fbfff;font-size:20px;font-weight:900;
+}
+.card h2{
+  margin:14px 0 6px;font-size:22px;letter-spacing:-.02em;
+}
+.card p{
+  margin:0;color:var(--muted);font-size:14px;line-height:1.5;
+}
+.footer-note{
+  margin-top:16px;
+  padding:12px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  color:#dbe5f4;
+  font-size:12px;
+  line-height:1.5;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="status">
+    <div id="clock">00:00</div>
+    <div>PREUVE</div>
+  </div>
+
+  <div class="shell">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">P</div>
+        <div>
+          <strong>PREUVE</strong>
+          <span>Accueil</span>
+        </div>
+      </div>
+      <div class="user" id="userName">Utilisateur</div>
+    </div>
+
+    <section class="hero">
+      <h1>Bienvenue</h1>
+      <p>
+        Choisis une section pour commencer. Cette page sert d’accueil principal de l’application.
+      </p>
+    </section>
+
+    <section class="cards">
+      <div class="card" onclick="alert('Page création (étape suivante)')">
+        <div class="card-top">
+          <div class="icon">✍️</div>
+          <div class="arrow">›</div>
+        </div>
+        <h2>Créer une preuve</h2>
+        <p>Formaliser un accord en plusieurs étapes avec signatures, photos, SMS et PDF.</p>
+      </div>
+
+      <div class="card" onclick="alert('Page historique (étape suivante)')">
+        <div class="card-top">
+          <div class="icon">🗂️</div>
+          <div class="arrow">›</div>
+        </div>
+        <h2>Historique</h2>
+        <p>Retrouver les preuves déjà créées, visualiser les récentes et préparer le verrouillage gratuit.</p>
+      </div>
+
+      <div class="card" onclick="alert('Page PRO (étape suivante)')">
+        <div class="card-top">
+          <div class="icon">💎</div>
+          <div class="arrow">›</div>
+        </div>
+        <h2>Version PRO</h2>
+        <p>Présenter les niveaux gratuit et payant, avec historique illimité, cloud et PDF sans watermark.</p>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Page 2 — Accueil. Quand cette page te convient, on passe à la vraie page de création de preuve.
+    </div>
+  </div>
+</div>
+
+<script>
+function updateClock(){
+  const d = new Date();
+  document.getElementById('clock').textContent =
+    String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+let user = JSON.parse(localStorage.getItem("preuve_current_user") || "null");
+document.getElementById("userName").innerText = user ? (user.name || user.email || "Utilisateur") : "Invité";
+</script>
+</body>
+</html>
