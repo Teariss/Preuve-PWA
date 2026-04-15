@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PREUVE — Création</title>
+<style>
+:root{
+  --bg1:#070b14;
+  --bg2:#0d1322;
+  --card1:rgba(20,24,36,.96);
+  --card2:rgba(12,15,24,.96);
+  --line:rgba(255,255,255,.08);
+  --line2:rgba(255,255,255,.12);
+  --text:#f5f7fb;
+  --muted:#9aa5bc;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  margin:0;height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(77,163,255,.18), transparent 24%),
+    radial-gradient(circle at top right, rgba(143,225,255,.08), transparent 20%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+}
+body{display:flex;justify-content:center}
+.app{width:100%;max-width:440px;min-height:100dvh;padding:12px 14px 24px;}
+.status{display:flex;justify-content:space-between;align-items:center;padding:6px 6px 14px;font-size:18px;font-weight:800;}
+.shell{
+  min-height:calc(100dvh - 68px);
+  border-radius:34px;padding:14px;
+  background:linear-gradient(180deg, rgba(18,20,28,.97), rgba(12,14,20,.97));
+  border:1px solid var(--line);
+  box-shadow:0 18px 55px rgba(0,0,0,.42);
+}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.logo{
+  width:56px;height:56px;border-radius:18px;display:grid;place-items:center;
+  font-weight:900;font-size:26px;color:#04111f;
+  background:linear-gradient(145deg,#84d8ff,#4da3ff 48%,#2d6eff);
+}
+.brand strong{display:block;font-size:22px;}
+.brand span{display:block;font-size:12px;color:var(--muted);}
+.badge{
+  padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);
+  border:1px solid var(--line);font-size:12px;font-weight:800;
+}
+.hero,.step{
+  background:linear-gradient(180deg,var(--card1),var(--card2));
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:18px;
+  box-shadow:0 18px 55px rgba(0,0,0,.22);
+  margin-bottom:16px;
+}
+.hero h1,.step h2{margin:0 0 6px;letter-spacing:-.03em}
+.hero h1{font-size:28px}
+.step h2{font-size:24px}
+.hero p,.step p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+.progress{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0;
+}
+.bar{
+  height:6px;border-radius:999px;background:rgba(255,255,255,.07);position:relative;overflow:hidden;
+}
+.bar.active::after{
+  content:"";position:absolute;inset:0;background:linear-gradient(90deg,#4da3ff,#8fe1ff);border-radius:999px;
+}
+.grid{display:grid;gap:12px;margin-top:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:12px;font-weight:800;color:#dbe5f4;margin:0 0 7px}
+input,textarea{
+  width:100%;padding:15px;border-radius:18px;border:1px solid var(--line2);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:15px;outline:none;
+}
+textarea{min-height:120px;resize:none}
+input::placeholder,textarea::placeholder{color:#7f889d}
+.btn,.btn-secondary{
+  width:100%;border:none;border-radius:18px;padding:16px 18px;font-size:16px;font-weight:800;cursor:pointer;
+}
+.btn{
+  color:#07111d;background:linear-gradient(135deg,#eef7ff,#8ad8ff 35%,#4da3ff 72%);
+  box-shadow:0 16px 28px rgba(77,163,255,.24);
+}
+.btn-secondary{
+  color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--line);margin-top:10px;
+}
+.hidden{display:none}
+.success-icon{
+  width:76px;height:76px;margin:0 auto 14px;border-radius:999px;display:grid;place-items:center;
+  background:linear-gradient(180deg,#55ec98,#31d17c);color:#06120b;font-size:32px;font-weight:900;
+}
+.proof-box{
+  margin-top:16px;padding:14px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid var(--line);
+}
+.proof-line{
+  display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.proof-line:last-child{border-bottom:none}
+.left{color:var(--muted);font-weight:700}
+.right{font-weight:800;text-align:right}
+.footer{
+  text-align:center;color:var(--muted);font-size:12px;margin-top:4px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="status">
+    <div id="clock">00:00</div>
+    <div>PREUVE</div>
+  </div>
+
+  <div class="shell">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">P</div>
+        <div>
+          <strong>PREUVE</strong>
+          <span>Création de preuve</span>
+        </div>
+      </div>
+      <div class="badge">Page 3</div>
+    </div>
+
+    <section class="hero">
+      <h1>Créer une preuve ✍️</h1>
+      
+      <div class="progress">
+        <div class="bar active"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </section>
+
+    <section id="step1" class="step">
+      <h2>Étape 1 — Accord ✍️</h2>
+      <p>Décris clairement ce qui a été convenu.</p>
+      <div class="grid">
+        <div>
+          <label>Texte de l’accord</label>
+          <textarea id="agreement" placeholder="Exemple : Jean reconnaît devoir 100 € à Léa avant le 20 mai 2026."></textarea>
+        </div>
+        <div class="row">
+          <div>
+            <label>Montant</label>
+            <input id="amount" placeholder="100 €">
+          </div>
+          <div>
+            <label>Date limite</label>
+            <input id="date" placeholder="20/05/2026">
+          </div>
+        </div>
+        <button class="btn" onclick="nextStep(2)">Continuer</button>
+      </div>
+    </section>
+
+    <section id="step2" class="step hidden">
+      <h2>Étape 2 — Parties 👥</h2>
+      <p>Renseigne les deux personnes concernées.</p>
+      <div class="grid">
+        <div>
+          <label>Partie 1</label>
+          <input id="p1" placeholder="Nom complet">
+        </div>
+        <div class="row">
+          <div>
+            <label>Partie 2</label>
+            <input id="p2" placeholder="Nom complet">
+          </div>
+          <div>
+            <label>Téléphone</label>
+            <input id="phone" placeholder="+33612345678">
+          </div>
+        </div>
+        <button class="btn" onclick="nextStep(3)">Continuer</button>
+        <button class="btn-secondary" onclick="nextStep(1)">Retour</button>
+      </div>
+    </section>
+
+    <section id="step3" class="step hidden">
+      <h2>Étape 3 — Ville 📍</h2>
+      <p>Indique simplement la ville où l’accord a été conclu.</p>
+      <div class="grid">
+        <div>
+          <label>Ville</label>
+          <input id="city" placeholder="Ex : Nancy">
+        </div>
+        <button class="btn" onclick="nextStep(4)">Continuer</button>
+        <button class="btn-secondary" onclick="nextStep(2)">Retour</button>
+      </div>
+    </section>
+
+    <section id="step4" class="step hidden">
+      <h2>Étape 4 — Signatures ✍️</h2>
+      <p>Pour l’instant, cette étape est une simulation visuelle. On branchera la vraie signature ensuite.</p>
+      <div class="grid">
+        <div class="proof-box">
+          <div class="proof-line"><div class="left">Partie 1</div><div class="right">Signature à venir</div></div>
+          <div class="proof-line"><div class="left">Partie 2</div><div class="right">Signature à venir</div></div>
+        </div>
+        <button class="btn" onclick="nextStep(5);fillSummary()">Finaliser</button>
+        <button class="btn-secondary" onclick="nextStep(3)">Retour</button>
+      </div>
+    </section>
+
+    <section id="step5" class="step hidden" style="text-align:center">
+      <div class="success-icon">✓</div>
+      <h2>Preuve créée ✅</h2>
+      <p>Le flow fonctionne. Ensuite, on branchera les vraies signatures, les photos, le SMS et le PDF.</p>
+      <div class="proof-box">
+        <div class="proof-line"><div class="left">Accord</div><div class="right" id="sAgreement">—</div></div>
+        <div class="proof-line"><div class="left">Montant</div><div class="right" id="sAmount">—</div></div>
+        <div class="proof-line"><div class="left">Date</div><div class="right" id="sDate">—</div></div>
+        <div class="proof-line"><div class="left">Partie 1</div><div class="right" id="sP1">—</div></div>
+        <div class="proof-line"><div class="left">Partie 2</div><div class="right" id="sP2">—</div></div>
+        <div class="proof-line"><div class="left">Ville</div><div class="right" id="sCity">—</div></div>
+      </div>
+      <button class="btn" onclick="resetFlow()">Créer une nouvelle preuve</button>
+      <button class="btn-secondary" onclick="nextStep(4)">Retour</button>
+    </section>
+
+    <div class="footer">
+      Page 3 — Création de preuve premium
+    </div>
+  </div>
+</div>
+
+<script>
+function updateClock(){
+  const d = new Date();
+  document.getElementById('clock').textContent =
+    String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+function nextStep(step){
+  document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
+  document.getElementById('step' + step).classList.remove('hidden');
+
+  const bars = document.querySelectorAll('.bar');
+  bars.forEach((bar, index) => bar.classList.toggle('active', index < step));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function fillSummary(){
+  const agreement = (document.getElementById('agreement').value || '—').trim();
+  document.getElementById('sAgreement').textContent = agreement.length > 22 ? agreement.slice(0,22) + '...' : agreement;
+  document.getElementById('sAmount').textContent = document.getElementById('amount').value || '—';
+  document.getElementById('sDate').textContent = document.getElementById('date').value || '—';
+  document.getElementById('sP1').textContent = document.getElementById('p1').value || '—';
+  document.getElementById('sP2').textContent = document.getElementById('p2').value || '—';
+  document.getElementById('sCity').textContent = document.getElementById('city').value || '—';
+}
+
+function resetFlow(){
+  ['agreement','amount','date','p1','p2','phone','city'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  nextStep(1);
+}
+</script>
+</body>
+</html>
