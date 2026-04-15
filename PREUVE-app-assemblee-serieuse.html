@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PREUVE — App assemblée</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root{
+      --bg1:#070b14;--bg2:#0d1322;--card1:rgba(20,24,36,.96);--card2:rgba(12,15,24,.96);
+      --line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.12);--text:#f5f7fb;--muted:#9aa5bc;
+      --card:rgba(20,24,36,.95);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{
+      margin:0;height:100%;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(77,163,255,.18), transparent 24%),
+        radial-gradient(circle at top right, rgba(143,225,255,.08), transparent 20%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      overflow-x:hidden;
+    }
+    body{display:flex;justify-content:center}
+    .app{width:100%;max-width:440px;min-height:100dvh;padding:12px 14px 24px}
+    .status{display:flex;justify-content:space-between;align-items:center;padding:6px 6px 14px;font-size:18px;font-weight:800}
+    .shell{
+      min-height:calc(100dvh - 68px);
+      border-radius:34px;padding:14px;
+      background:linear-gradient(180deg, rgba(18,20,28,.97), rgba(12,14,20,.97));
+      border:1px solid var(--line);box-shadow:0 18px 55px rgba(0,0,0,.42);
+      display:flex;flex-direction:column;
+    }
+    .hide{display:none!important}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:56px;height:56px;border-radius:18px;display:grid;place-items:center;
+      font-weight:900;font-size:26px;color:#04111f;
+      background:linear-gradient(145deg,#84d8ff,#4da3ff 48%,#2d6eff);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 10px 30px rgba(77,163,255,.35),0 0 24px rgba(77,163,255,.22);
+    }
+    .brand strong{display:block;font-size:22px}
+    .brand span,.slogan{display:block;font-size:12px;color:var(--muted)}
+    .user,.ghost-pill{
+      padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);
+      border:1px solid var(--line);font-size:12px;font-weight:800;color:#dbe5f4;
+    }
+    .card,.hero,.progress-card,.step{
+      background:linear-gradient(180deg,var(--card1),var(--card2));
+      border:1px solid var(--line);border-radius:28px;padding:18px;
+      box-shadow:0 18px 55px rgba(0,0,0,.22);
+    }
+    h1,h2,p{margin:0}
+    h1{font-size:30px;letter-spacing:-.03em;margin-bottom:6px}
+    h2{font-size:24px;letter-spacing:-.03em;margin-bottom:6px}
+    .muted{color:var(--muted);font-size:14px;line-height:1.5}
+    .small{font-size:13px;color:var(--muted);line-height:1.5}
+    label{display:block;font-size:12px;font-weight:800;color:#dbe5f4;margin:0 0 7px}
+    input,textarea{
+      width:100%;padding:15px;border-radius:18px;border:1px solid var(--line2);
+      background:rgba(255,255,255,.04);color:var(--text);font-size:15px;outline:none;
+    }
+    input::placeholder,textarea::placeholder{color:#7f889d}
+    textarea{min-height:118px;resize:none}
+    .grid{display:grid;gap:12px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn,.primary,.secondary,.close{
+      width:100%;border:none;border-radius:18px;padding:16px 18px;font-size:16px;font-weight:800;cursor:pointer;
+    }
+    .btn,.primary,.close{
+      color:#07111d;background:linear-gradient(135deg,#eef7ff,#8ad8ff 35%,#4da3ff 72%);
+      box-shadow:0 16px 28px rgba(77,163,255,.24);
+    }
+    .secondary{color:var(--text);background:rgba(255,255,255,.05);border:1px solid var(--line);margin-top:10px}
+    .delete{background:#1f2937;color:white}
+    .unlock{background:linear-gradient(135deg,#8ad8ff,#4da3ff);color:#07111d}
+    .footer{text-align:center;color:var(--muted);font-size:12px;padding:16px 0 8px}
+    .nav{margin-top:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:14px}
+    .nav button{
+      border:none;background:transparent;color:#dce7f8;padding:12px;border-radius:14px;font-weight:800;cursor:pointer;font-size:15px;
+    }
+    .nav button.active{
+      color:#07111d;background:linear-gradient(135deg,#eef7ff,#8ad8ff 35%,#4da3ff 72%);
+    }
+
+    /* page 1 */
+    #screen1 .shell-inner{display:flex;flex-direction:column;justify-content:center;min-height:calc(100dvh - 120px)}
+    .tabs{
+      display:grid;grid-template-columns:1fr 1fr;gap:8px;
+      margin-top:16px;padding:6px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line);
+    }
+    .tabs button{
+      border:none;background:transparent;color:#dce7f8;padding:12px;border-radius:14px;font-weight:800;cursor:pointer;font-size:15px;
+    }
+    .tabs button.active{color:#07111d;background:linear-gradient(135deg,#eef7ff,#8ad8ff 35%,#4da3ff 72%)}
+    .note{
+      margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);
+      color:#dbe5f4;font-size:12px;line-height:1.5;
+    }
+    .success{
+      margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(49,209,124,.10);border:1px solid rgba(49,209,124,.22);
+      color:#9cf0be;font-size:13px;font-weight:700;display:none;
+    }
+
+    /* page 2 */
+    .home-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .hero{margin-bottom:16px}
+    .hero h1{font-size:28px}
+    .cards{display:grid;gap:14px}
+    .home-card{background:linear-gradient(180deg,var(--card1),var(--card2));border:1px solid var(--line);border-radius:24px;padding:18px;cursor:pointer}
+    .home-card h2{margin:0 0 6px;font-size:20px}
+    .home-card p{margin:0;color:var(--muted);font-size:14px}
+
+    /* page 3 exact style */
+    .device-topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 4px 14px}
+    .progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .progress-title{font-weight:700}
+    .progress{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .bar{height:6px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;position:relative}
+    .bar.active::after{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(90deg,#4da3ff,#6ee7ff)}
+    .upload-box,.loc-box,.sig-card,.proof-card{padding:14px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid var(--line2)}
+    .loc-status{font-size:13px;color:#cfd6e7;margin-top:8px;line-height:1.4}
+    .file-input{padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px dashed var(--line2)}
+    .sig-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .link-btn{border:none;background:none;padding:0;color:#8bc3ff;font-weight:700;font-size:13px}
+    canvas{width:100%;height:132px;display:block;border-radius:18px;background:#ffffff;border:1px dashed rgba(0,0,0,.12)}
+    .badge{
+      width:76px;height:76px;margin:0 auto 14px;border-radius:999px;display:grid;place-items:center;
+      background:linear-gradient(180deg,#55ec98,#31d17c);color:#06120b;font-size:32px;font-weight:900;box-shadow:0 16px 34px rgba(49,209,124,.22)
+    }
+    .proof-card{margin-top:16px;text-align:left}
+    .proof-row{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);align-items:start}
+    .proof-row:last-child{border-bottom:none}
+    .proof-label{color:var(--muted);font-weight:600}
+    .proof-value{font-weight:700;text-align:right;word-break:break-word}
+    .proof-value.multiline{text-align:left;line-height:1.5;font-weight:600}
+    .signatures-grid,.photos-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+    .sig-preview-card,.photo-card{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.03);padding:10px}
+    .sig-preview-title,.photo-title{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px}
+    .sig-preview,.photo-preview{width:100%;height:88px;object-fit:cover;border-radius:14px;background:#fff}
+
+    /* page 4 exact style */
+    .counter{margin:12px 0 18px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);font-size:13px;color:#dbe5f4}
+    .history-card{background:var(--card);border:1px solid var(--line);padding:16px;border-radius:18px;margin-bottom:12px;position:relative}
+    .history-card.locked{opacity:.5}
+    .history-card.clickable{cursor:pointer}
+    .actions{display:flex;gap:10px;margin-top:10px}
+    .actions button{flex:1;padding:10px;border:none;border-radius:12px;font-weight:bold;cursor:pointer}
+    .empty{background:var(--card);border:1px solid var(--line);padding:20px;border-radius:18px;color:var(--muted);text-align:center}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:999}
+    .overlay.show{display:flex}
+    .viewer{width:100%;max-width:420px;background:var(--card);border:1px solid var(--line2);border-radius:24px;padding:18px;max-height:85vh;overflow:auto}
+    .viewer h2{margin:0 0 8px;font-size:22px}
+    .view-row{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .view-row:last-child{border-bottom:none}
+    .view-label{color:var(--muted);font-weight:700;font-size:13px}
+    .view-value{font-weight:700;font-size:14px;word-break:break-word}
+    .photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .photos img{width:100%;height:100px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="status">
+      <div id="clock">00:00</div>
+      <div>PREUVE</div>
+    </div>
+
+    <div class="shell">
+      <!-- PAGE 1 -->
+      <section id="screen1">
+        <div class="shell-inner">
+          <div class="brand" style="margin-bottom:16px">
+            <div class="logo">P</div>
+            <div>
+              <strong>PREUVE</strong>
+              <span>Page 1 — Connexion / inscription</span>
+            </div>
+          </div>
+
+          <section class="card">
+            <h1 id="title">Créer un compte</h1>
+            <p class="muted" id="subtitle">Inscription locale simple pour tester l’application avant le vrai backend.</p>
+
+            <div class="tabs">
+              <button id="signupTab" class="active" onclick="switchMode('signup')">Inscription</button>
+              <button id="loginTab" onclick="switchMode('login')">Connexion</button>
+            </div>
+
+            <div class="grid" style="margin-top:16px">
+              <div id="nameWrap">
+                <label>Nom complet</label>
+                <input id="name" placeholder="Ex : Jean Dupont" />
+              </div>
+              <div>
+                <label>Adresse mail</label>
+                <input id="email" type="email" placeholder="nom@email.com" />
+              </div>
+              <div>
+                <label>Mot de passe</label>
+                <input id="password" type="password" placeholder="••••••••" />
+              </div>
+
+              <button class="btn" onclick="submitForm()">Continuer</button>
+            </div>
+
+            <div class="success" id="successBox"></div>
+
+            <div class="note">
+              Cette page sert à tester le flow. Les comptes sont stockés localement dans le navigateur tant qu’on n’a pas branché le vrai backend.
+            </div>
+          </section>
+
+          <div class="footer">
+            Quand cette page est validée, on passe à la page 2.
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 2 -->
+      <section id="screen2" class="hide">
+        <div class="home-top">
+          <div class="brand">
+            <div class="logo">P</div>
+            <div>
+              <strong>PREUVE</strong>
+              <span>Créer. Sécuriser. Prouver.</span>
+            </div>
+          </div>
+          <div class="user" id="userName">Utilisateur</div>
+        </div>
+
+        <div class="hero">
+          <h1>Bienvenue sur PREUVE 👋</h1>
+          <p class="muted">Crée une preuve en quelques secondes et protège tes accords.</p>
+        </div>
+
+        <div class="cards">
+          <div class="home-card" onclick="showScreen('screen3')">
+            <h2>✍️ Créer une preuve</h2>
+            <p>Formalise un accord rapidement et en toute sécurité.</p>
+          </div>
+
+          <div class="home-card" onclick="showScreen('screen4')">
+            <h2>🗂️ Mes preuves</h2>
+            <p>Retrouve toutes tes preuves en un instant.</p>
+          </div>
+
+          <div class="home-card">
+            <h2>💎 Passer en PRO</h2>
+            <p>Débloque toutes les fonctionnalités et l’historique complet.</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          Tes preuves sont stockées sur ton appareil. Pense à télécharger ton PDF.
+        </div>
+      </section>
+
+      <!-- PAGE 3 -->
+      <section id="screen3" class="hide">
+        <div class="device-topbar">
+          <div class="brand">
+            <div class="logo">P</div>
+            <div>
+              <strong>PREUVE</strong>
+              <div class="slogan">Engagé. Vérifié. Incontestable.</div>
+            </div>
+          </div>
+          <div class="ghost-pill">Sécurisé</div>
+        </div>
+
+        <section class="progress-card">
+          <div class="progress-top">
+            <div class="progress-title">Créer une preuve</div>
+            <div class="small">5 étapes</div>
+          </div>
+          <div class="progress">
+            <div class="bar active"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+          </div>
+        </section>
+
+        <section class="step" id="step1">
+          <h2>L’accord</h2>
+          <p class="muted">Décris clairement ce qui est accepté entre les deux parties.</p>
+          <div class="grid">
+            <div>
+              <label>Texte de l’accord</label>
+              <textarea id="agreement" placeholder="Exemple : Jean reconnaît devoir 100 € à Léa avant le 20 mai 2026."></textarea>
+            </div>
+            <div class="row">
+              <div>
+                <label>Montant</label>
+                <input id="amount" placeholder="100 €" />
+              </div>
+              <div>
+                <label>Date limite</label>
+                <input id="deadline" placeholder="20/05/2026" />
+              </div>
+            </div>
+            <button class="primary" onclick="goStep(2)">Continuer</button>
+          </div>
+        </section>
+
+        <section class="step hide" id="step2">
+          <h2>Les parties</h2>
+          <p class="muted">Ajoute les noms des deux parties.</p>
+          <div class="grid">
+            <div>
+              <label>Partie 1</label>
+              <input id="p1" placeholder="Nom complet" />
+            </div>
+            <div>
+              <label>Partie 2</label>
+              <input id="p2" placeholder="Nom complet" />
+            </div>
+            <button class="primary" onclick="goStep(3)">Ajouter preuves visuelles</button>
+            <button class="secondary" onclick="goStep(1)">Retour</button>
+          </div>
+        </section>
+
+        <section class="step hide" id="step3">
+          <h2>Photos & ville</h2>
+          <p class="muted">Ajoute des photos et indique la ville de l’accord.</p>
+          <div class="grid">
+            <div class="upload-box">
+              <label>Photos de preuve</label>
+              <input id="photoInput" class="file-input" type="file" accept="image/*" multiple />
+              <div id="photoStatus" class="loc-status">Aucune photo ajoutée</div>
+            </div>
+
+            <div class="loc-box">
+              <label>Ville</label>
+              <input id="city" placeholder="Ex : Nancy" />
+            </div>
+
+            <button class="primary" onclick="goStep(4)">Passer aux signatures</button>
+            <button class="secondary" onclick="goStep(2)">Retour</button>
+          </div>
+        </section>
+
+        <section class="step hide" id="step4">
+          <h2>Les signatures</h2>
+          <p class="muted">Les deux signatures sont obligatoires.</p>
+          <div class="grid">
+            <div class="sig-card">
+              <div class="sig-meta">
+                <strong id="sig1name">Partie 1</strong>
+                <button class="link-btn" onclick="clearCanvas('sig1')">Effacer</button>
+              </div>
+              <canvas id="sig1" width="360" height="132"></canvas>
+            </div>
+            <div class="sig-card">
+              <div class="sig-meta">
+                <strong id="sig2name">Partie 2</strong>
+                <button class="link-btn" onclick="clearCanvas('sig2')">Effacer</button>
+              </div>
+              <canvas id="sig2" width="360" height="132"></canvas>
+            </div>
+            <button class="primary" onclick="finalizeProof()">Finaliser la preuve</button>
+            <button class="secondary" onclick="goStep(3)">Retour</button>
+          </div>
+        </section>
+
+        <section class="step hide success" id="step5">
+          <div class="badge">✓</div>
+          <h2 style="margin-bottom:6px">Preuve validée</h2>
+          <p class="muted" style="max-width:312px;margin:0 auto">La fiche finale regroupe les informations utiles, les photos, la localisation et les signatures.</p>
+
+          <div class="proof-card">
+            <div class="proof-row"><div class="proof-label">Référence</div><div class="proof-value" id="ref">PR-2026-1042</div></div>
+            <div class="proof-row"><div class="proof-label">Horodatage</div><div class="proof-value" id="stamp"></div></div>
+            <div class="proof-row"><div class="proof-label">Partie 1</div><div class="proof-value" id="outP1">—</div></div>
+            <div class="proof-row"><div class="proof-label">Partie 2</div><div class="proof-value" id="outP2">—</div></div>
+            <div class="proof-row"><div class="proof-label">Accord</div><div class="proof-value multiline" id="outAgreement">—</div></div>
+            <div class="proof-row"><div class="proof-label">Montant</div><div class="proof-value" id="outAmount">—</div></div>
+            <div class="proof-row"><div class="proof-label">Date limite</div><div class="proof-value" id="outDeadline">—</div></div>
+            <div class="proof-row"><div class="proof-label">Localisation</div><div class="proof-value multiline" id="outLocation">Non capturée</div></div>
+
+            <div class="proof-row" style="grid-template-columns:1fr;">
+              <div class="proof-label" style="margin-bottom:4px">Photos</div>
+              <div class="photos-grid" id="photosGrid"></div>
+            </div>
+
+            <div class="proof-row" style="grid-template-columns:1fr;">
+              <div class="proof-label" style="margin-bottom:4px">Signatures</div>
+              <div class="signatures-grid">
+                <div class="sig-preview-card">
+                  <div class="sig-preview-title" id="sigPrev1Title">Partie 1</div>
+                  <img id="sigPreview1" class="sig-preview" alt="Signature 1" />
+                </div>
+                <div class="sig-preview-card">
+                  <div class="sig-preview-title" id="sigPrev2Title">Partie 2</div>
+                  <img id="sigPreview2" class="sig-preview" alt="Signature 2" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="primary" style="margin-top:14px" onclick="generatePDF()">Télécharger le PDF</button>
+          <button class="secondary" onclick="resetFlow()">Créer une nouvelle preuve</button>
+          <button class="secondary" onclick="goStep(4)">Retour</button>
+        </section>
+      </section>
+
+      <!-- PAGE 4 -->
+      <section id="screen4" class="hide">
+        <div class="header">
+          <h1>Mes preuves 🗂️</h1>
+          <p class="muted">5 preuves visibles gratuitement</p>
+        </div>
+
+        <div class="counter" id="counter">0 / 5 preuves visibles</div>
+        <div id="list"></div>
+      </section>
+
+      <div class="nav hide" id="nav">
+        <button id="navHome" class="active" onclick="showScreen('screen2')">Accueil</button>
+        <button id="navCreate" onclick="showScreen('screen3')">Créer</button>
+        <button id="navHistory" onclick="showScreen('screen4')">Historique</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="viewer">
+      <h2>Preuve enregistrée</h2>
+      <div class="view-row"><div class="view-label">Partie 1</div><div class="view-value" id="vP1">—</div></div>
+      <div class="view-row"><div class="view-label">Partie 2</div><div class="view-value" id="vP2">—</div></div>
+      <div class="view-row"><div class="view-label">Accord</div><div class="view-value" id="vAccord">—</div></div>
+      <div class="view-row"><div class="view-label">Montant</div><div class="view-value" id="vMontant">—</div></div>
+      <div class="view-row"><div class="view-label">Date</div><div class="view-value" id="vDate">—</div></div>
+      <div class="view-row"><div class="view-label">Date limite</div><div class="view-value" id="vDateLimite">—</div></div>
+      <div class="view-row"><div class="view-label">Ville</div><div class="view-value" id="vVille">—</div></div>
+      <div id="photosWrap" class="hide">
+        <div class="small" style="margin-top:10px">Photos</div>
+        <div class="photos" id="photos"></div>
+      </div>
+      <div class="small" style="margin-top:10px">Les preuves verrouillées ne peuvent pas être rouvertes dans la version gratuite.</div>
+      <button class="close" onclick="closeViewer()">Fermer</button>
+    </div>
+  </div>
+
+  <script>
+    let mode = 'signup';
+    let photoData = [];
+
+    function updateClock(){
+      const d = new Date();
+      document.getElementById('clock').textContent =
+        String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    function switchMode(nextMode){
+      mode = nextMode;
+      document.getElementById('signupTab').classList.toggle('active', nextMode === 'signup');
+      document.getElementById('loginTab').classList.toggle('active', nextMode === 'login');
+      document.getElementById('nameWrap').classList.toggle('hide', nextMode === 'login');
+      document.getElementById('title').textContent = nextMode === 'signup' ? 'Créer un compte' : 'Se connecter';
+      document.getElementById('subtitle').textContent = nextMode === 'signup'
+        ? 'Inscription locale simple pour tester l’application avant le vrai backend.'
+        : 'Connexion locale pour retrouver la session de test.';
+      document.getElementById('successBox').style.display = 'none';
+      document.getElementById('successBox').textContent = '';
+    }
+
+    function getUsers(){
+      try{return JSON.parse(localStorage.getItem('preuve_users') || '[]');}catch(e){return [];}
+    }
+    function saveUsers(users){
+      localStorage.setItem('preuve_users', JSON.stringify(users));
+    }
+
+    function submitForm(){
+      const name = (document.getElementById('name').value || '').trim();
+      const email = (document.getElementById('email').value || '').trim().toLowerCase();
+      const password = (document.getElementById('password').value || '').trim();
+      const box = document.getElementById('successBox');
+
+      if(!email || !password){
+        alert('Renseigne ton email et ton mot de passe.');
+        return;
+      }
+
+      const users = getUsers();
+
+      if(mode === 'signup'){
+        if(!name){
+          alert('Renseigne ton nom complet.');
+          return;
+        }
+        if(users.find(u => u.email === email)){
+          alert('Un compte existe déjà avec cet email.');
+          return;
+        }
+
+        const user = { name, email, password, plan: 'free', created_at: new Date().toISOString() };
+        users.push(user);
+        saveUsers(users);
+        localStorage.setItem('preuve_current_user', JSON.stringify(user));
+        box.textContent = 'Compte créé avec succès.';
+        box.style.display = 'block';
+      } else {
+        const user = users.find(u => u.email === email && u.password === password);
+        if(!user){
+          alert('Email ou mot de passe incorrect.');
+          return;
+        }
+        localStorage.setItem('preuve_current_user', JSON.stringify(user));
+        box.textContent = 'Connexion réussie.';
+        box.style.display = 'block';
+      }
+
+      updateUserName();
+      document.getElementById('nav').classList.remove('hide');
+      setTimeout(() => showScreen('screen2'), 250);
+    }
+
+    function updateUserName(){
+      let user = JSON.parse(localStorage.getItem("preuve_current_user") || "null");
+      document.getElementById("userName").innerText = user ? (user.name || user.email) : "Invité";
+    }
+
+    function showScreen(id){
+      ['screen1','screen2','screen3','screen4'].forEach(s => document.getElementById(s).classList.add('hide'));
+      document.getElementById(id).classList.remove('hide');
+
+      document.getElementById('navHome').classList.toggle('active', id==='screen2');
+      document.getElementById('navCreate').classList.toggle('active', id==='screen3');
+      document.getElementById('navHistory').classList.toggle('active', id==='screen4');
+
+      if(id === 'screen4') loadHistory();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function goStep(n){
+      for(let i=1;i<=5;i++){
+        const el = document.getElementById('step'+i);
+        if(el) el.classList.toggle('hide', i !== n);
+      }
+      const bars = document.querySelectorAll('.bar');
+      bars.forEach((bar, idx)=>bar.classList.toggle('active', idx < Math.min(n,5)));
+
+      const sig1name = document.getElementById('sig1name');
+      const sig2name = document.getElementById('sig2name');
+      if(sig1name) sig1name.textContent = document.getElementById('p1').value || 'Partie 1';
+      if(sig2name) sig2name.textContent = document.getElementById('p2').value || 'Partie 2';
+
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    document.getElementById('photoInput').addEventListener('change', function(e){
+      const files = Array.from(e.target.files || []).slice(0,4);
+      photoData = [];
+      const status = document.getElementById('photoStatus');
+      if(!files.length){
+        status.textContent = 'Aucune photo ajoutée';
+        return;
+      }
+      let loaded = 0;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          photoData.push(ev.target.result);
+          loaded++;
+          status.textContent = loaded + ' photo(s) ajoutée(s)';
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    function canvasHasDrawing(canvas){
+      const ctx = canvas.getContext('2d');
+      const pixels = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+      for(let i=3;i<pixels.length;i+=4){ if(pixels[i] !== 0) return true; }
+      return false;
+    }
+
+    function finalizeProof(){
+      const sig1 = document.getElementById('sig1');
+      const sig2 = document.getElementById('sig2');
+      if(!canvasHasDrawing(sig1) || !canvasHasDrawing(sig2)){
+        alert('Les deux signatures sont obligatoires.');
+        return;
+      }
+
+      const d = new Date();
+      const ref = 'PR-' + d.getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000);
+
+      document.getElementById('stamp').textContent = d.toLocaleString('fr-FR');
+      document.getElementById('outP1').textContent = document.getElementById('p1').value || '—';
+      document.getElementById('outP2').textContent = document.getElementById('p2').value || '—';
+      document.getElementById('outAgreement').textContent = document.getElementById('agreement').value || '—';
+      document.getElementById('outAmount').textContent = document.getElementById('amount').value || '—';
+      document.getElementById('outDeadline').textContent = document.getElementById('deadline').value || '—';
+      document.getElementById('ref').textContent = ref;
+      document.getElementById('outLocation').textContent = document.getElementById('city').value || 'Non capturée';
+
+      document.getElementById('sigPrev1Title').textContent = document.getElementById('p1').value || 'Partie 1';
+      document.getElementById('sigPrev2Title').textContent = document.getElementById('p2').value || 'Partie 2';
+      document.getElementById('sigPreview1').src = sig1.toDataURL('image/png');
+      document.getElementById('sigPreview2').src = sig2.toDataURL('image/png');
+
+      const grid = document.getElementById('photosGrid');
+      grid.innerHTML = '';
+      if(photoData.length){
+        photoData.forEach((src, i) => {
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          card.innerHTML = '<div class="photo-title">Photo ' + (i+1) + '</div><img class="photo-preview" src="' + src + '" alt="Photo ' + (i+1) + '">';
+          grid.appendChild(card);
+        });
+      } else {
+        grid.innerHTML = '<div class="photo-card"><div class="photo-title">Photos</div><div class="muted" style="margin:0">Aucune photo ajoutée</div></div>';
+      }
+
+      const data = JSON.parse(localStorage.getItem('preuves') || '[]');
+      data.unshift({
+        id: ref,
+        date: d.toLocaleString('fr-FR'),
+        accord: document.getElementById('agreement').value || '',
+        montant: document.getElementById('amount').value || '',
+        dateLimite: document.getElementById('deadline').value || '',
+        partie1: document.getElementById('p1').value || '',
+        partie2: document.getElementById('p2').value || '',
+        ville: document.getElementById('city').value || '',
+        photos: [...photoData]
+      });
+      localStorage.setItem('preuves', JSON.stringify(data));
+
+      goStep(5);
+    }
+
+    function generatePDF(){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const p1 = document.getElementById('p1').value || '—';
+      const p2 = document.getElementById('p2').value || '—';
+      const agreement = document.getElementById('agreement').value || '—';
+      const amount = document.getElementById('amount').value || '—';
+      const deadline = document.getElementById('deadline').value || '—';
+      const stamp = document.getElementById('stamp').textContent || new Date().toLocaleString('fr-FR');
+      const ref = document.getElementById('ref').textContent || ('PR-' + new Date().getFullYear());
+
+      const sig1 = document.getElementById('sig1').toDataURL('image/png');
+      const sig2 = document.getElementById('sig2').toDataURL('image/png');
+
+      let y = 20;
+      doc.setFillColor(18,20,28); doc.rect(0,0,210,34,'F');
+      doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.text('PREUVE', 20, 18);
+      doc.setFontSize(10); doc.setTextColor(190,198,214); doc.text('Engagé. Vérifié. Incontestable.', 20, 25);
+
+      y = 46;
+      doc.setTextColor(20,24,32); doc.setFontSize(11);
+      [["Référence", ref],["Horodatage", stamp],["Partie 1", p1],["Partie 2", p2],["Montant", amount],["Date limite", deadline],["Ville", document.getElementById('city').value || 'Non renseignée']]
+        .forEach(([k,v]) => {
+          doc.setFont('helvetica','bold'); doc.text(k, 20, y);
+          doc.setFont('helvetica','normal'); doc.text(String(v), 70, y);
+          y += 8;
+        });
+
+      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.text('Accord', 20, y + 4);
+      y += 12;
+      doc.setFont('helvetica','normal'); doc.setFontSize(11);
+      const wrapped = doc.splitTextToSize(agreement, 170); doc.text(wrapped, 20, y);
+
+      y += wrapped.length * 6 + 12;
+      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.text('Signatures', 20, y);
+      y += 8;
+      doc.setDrawColor(220,225,232); doc.setFillColor(250,251,253);
+      doc.roundedRect(20, y, 78, 42, 4, 4, 'FD'); doc.roundedRect(112, y, 78, 42, 4, 4, 'FD');
+      doc.addImage(sig1, 'PNG', 24, y + 6, 70, 24); doc.addImage(sig2, 'PNG', 116, y + 6, 70, 24);
+
+      if(photoData.length){
+        doc.addPage();
+        doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.text('Photos de preuve', 20, 20);
+        let px = 20, py = 30;
+        photoData.slice(0,4).forEach((src, i) => {
+          doc.addImage(src, 'JPEG', px, py, 80, 60);
+          px += 90;
+          if((i % 2) === 1){ px = 20; py += 70; }
+        });
+      }
+
+      doc.save((ref || 'preuve') + '.pdf');
+    }
+
+    function setupSignature(id){
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext('2d');
+      ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.strokeStyle = '#1d1d1f';
+      let drawing = false;
+      function getPos(e){
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x:(clientX-rect.left)*(canvas.width/rect.width), y:(clientY-rect.top)*(canvas.height/rect.height) };
+      }
+      function start(e){ drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
+      function move(e){ if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); }
+      function end(){ drawing = false; }
+      canvas.addEventListener('mousedown', start);
+      canvas.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', end);
+      canvas.addEventListener('touchstart', start, {passive:false});
+      canvas.addEventListener('touchmove', move, {passive:false});
+      canvas.addEventListener('touchend', end);
+    }
+
+    function clearCanvas(id){
+      const c = document.getElementById(id);
+      c.getContext('2d').clearRect(0,0,c.width,c.height);
+    }
+
+    function resetFlow(){
+      ["agreement","amount","deadline","p1","p2","city"].forEach(id => document.getElementById(id).value = "");
+      document.getElementById('photoInput').value = '';
+      document.getElementById('photoStatus').textContent = 'Aucune photo ajoutée';
+      photoData = [];
+      clearCanvas('sig1');
+      clearCanvas('sig2');
+      goStep(1);
+      showScreen('screen3');
+    }
+
+    function loadHistory(){
+      const data = JSON.parse(localStorage.getItem("preuves") || "[]");
+      const list = document.getElementById("list");
+      const counter = document.getElementById("counter");
+      list.innerHTML = "";
+
+      if(data.length <= 5){
+        counter.textContent = data.length + " / 5 preuves visibles";
+      } else {
+        counter.textContent = data.length + " preuves enregistrées • certaines sont verrouillées";
+      }
+
+      if(!data.length){
+        list.innerHTML = '<div class="empty">Aucune preuve enregistrée pour le moment.</div>';
+        return;
+      }
+
+      data.forEach((p,i)=>{
+        const div = document.createElement("div");
+        div.className = "history-card " + (i>=5 ? "locked" : "clickable");
+        div.innerHTML = `
+          ${i>=5 ? "<div style='position:absolute;top:10px;right:10px;font-size:12px;background:rgba(255,255,255,.05);padding:5px 8px;border-radius:8px;'>🔒 Verrouillé</div>" : ""}
+          <div style="font-weight:bold;margin-bottom:5px">${p.partie1 || "—"} ↔ ${p.partie2 || "—"}</div>
+          <div class="small">${p.accord || "Sans description"}</div>
+          <div class="small">${p.date || ""}</div>
+          <div class="small">${p.montant ? "Montant : " + p.montant : ""}${p.ville ? " • " + p.ville : ""}</div>
+          <div class="actions">
+            <button class="delete" onclick="event.stopPropagation(); delProof(${i})">Supprimer</button>
+            ${i>=5 ? "<button class='unlock'>Débloquer</button>" : ""}
+          </div>
+        `;
+        if(i < 5){
+          div.addEventListener('click', () => openViewer(p));
+        }
+        list.appendChild(div);
+      });
+    }
+
+    function delProof(i){
+      const data = JSON.parse(localStorage.getItem("preuves") || "[]");
+      data.splice(i,1);
+      localStorage.setItem("preuves", JSON.stringify(data));
+      loadHistory();
+    }
+
+    function openViewer(p){
+      document.getElementById('vP1').textContent = p.partie1 || "—";
+      document.getElementById('vP2').textContent = p.partie2 || "—";
+      document.getElementById('vAccord').textContent = p.accord || "—";
+      document.getElementById('vMontant').textContent = p.montant || "—";
+      document.getElementById('vDate').textContent = p.date || "—";
+      document.getElementById('vDateLimite').textContent = p.dateLimite || "—";
+      document.getElementById('vVille').textContent = p.ville || "—";
+
+      const photosWrap = document.getElementById('photosWrap');
+      const photos = document.getElementById('photos');
+      photos.innerHTML = '';
+      if(Array.isArray(p.photos) && p.photos.length){
+        photosWrap.classList.remove('hide');
+        p.photos.slice(0,4).forEach(src => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = 'Photo de preuve';
+          photos.appendChild(img);
+        });
+      } else {
+        photosWrap.classList.add('hide');
+      }
+
+      document.getElementById('overlay').classList.add('show');
+    }
+
+    function closeViewer(){
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    document.getElementById('overlay').addEventListener('click', function(e){
+      if(e.target === this) closeViewer();
+    });
+
+    setupSignature('sig1');
+    setupSignature('sig2');
+    goStep(1);
+    updateUserName();
+
+    if(localStorage.getItem('preuve_current_user')){
+      document.getElementById('nav').classList.remove('hide');
+      showScreen('screen2');
+    } else {
+      showScreen('screen1');
+    }
+  </script>
+</body>
+</html>
